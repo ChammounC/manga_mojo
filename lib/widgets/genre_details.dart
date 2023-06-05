@@ -3,25 +3,27 @@ import 'package:flutter/material.dart';
 
 class GenreDetails extends StatelessWidget {
   late final Anime animeData;
-  GenreDetails({required this.animeData});
+  BuildContext context;
+  GenreDetails({required this.animeData,required this.context});
 
   Widget moveLabel(String text, dynamic pokeData) {
     return Container(
       decoration: BoxDecoration(
-        color: Color.fromRGBO(255, 222, 89, 1),
+        color: Theme.of(context).primaryColor,
         borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Theme.of(context).secondaryHeaderColor)
       ),
       child: Center(
         child: Text(
           text,
-          style: const TextStyle(
+          style:  TextStyle(
             fontWeight: FontWeight.w600,
-            color: Colors.white,
+            color: Color.fromRGBO(150, 150, 150, 1),
             shadows: <Shadow>[
               Shadow(
                 offset: Offset(2, 2),
-                blurRadius: 7,
-                color: Colors.grey,
+                blurRadius: 2,
+                color: Colors.grey.withOpacity(0.1),
               ),
             ],
           ),

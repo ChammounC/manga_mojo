@@ -16,6 +16,7 @@ class AnimeDetails extends StatefulWidget {
 
 class _AnimeDetailScreenState extends State<AnimeDetails> {
   var _isInit = true;
+  var showRecommendation=true;
 
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -30,6 +31,9 @@ class _AnimeDetailScreenState extends State<AnimeDetails> {
   Widget build(BuildContext context) {
     final dataProvider = Provider.of<DataService>(context);
     final Anime animeData = dataProvider.animeData;
+    if(dataProvider.recommendationList.isEmpty){
+      showRecommendation=false;
+    }
     final device = MediaQuery.of(context);
     // final screenHeight = device.size.height;
     final screenWidth = device.size.width;
@@ -58,7 +62,7 @@ class _AnimeDetailScreenState extends State<AnimeDetails> {
         ),
       ),
       extendBodyBehindAppBar: true,
-      backgroundColor: Color.fromRGBO(255, 222, 89, 1),
+      backgroundColor: Theme.of(context).primaryColor,
       body: !dataProvider.isLoading
           ? Stack(
         clipBehavior: Clip.none,
@@ -66,6 +70,7 @@ class _AnimeDetailScreenState extends State<AnimeDetails> {
           Container(
             height: screenWidth / 1.3,
             width: screenWidth,
+            color: const Color.fromRGBO(255, 222, 89, 1),
             child: ColorFiltered(
               colorFilter: ColorFilter.mode(
                   Colors.black.withOpacity(0.3), BlendMode.multiply),
@@ -77,16 +82,15 @@ class _AnimeDetailScreenState extends State<AnimeDetails> {
                 ),
               ),
             ),
-            color: Color.fromRGBO(255, 222, 89, 1),
           ),
           SingleChildScrollView(
             padding: EdgeInsets.only(top: screenWidth / 1.5),
             clipBehavior: Clip.none,
             child: Container(
               width: screenWidth,
-              // padding: EdgeInsets.all(25).copyWith(top: 35),
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              padding:const EdgeInsets.only(bottom:25),
+              decoration:  BoxDecoration(
+                color: Theme.of(context).primaryColorDark,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(25),
                   topRight: Radius.circular(25),
@@ -110,25 +114,27 @@ class _AnimeDetailScreenState extends State<AnimeDetails> {
                       textAlign: TextAlign.left,
                       style: const TextStyle(
                         fontSize: 16,
+                        color:Color.fromRGBO(120, 120, 120, 1),
                       ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 25, vertical: 15),
-                    child: GenreDetails(animeData: animeData),
+                    child: GenreDetails(animeData: animeData,context:context),
                   ),
-                  const Padding(
+                  showRecommendation==true? const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 25),
                     child: Text(
                       'Animes Like This',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
+                        color:Color.fromRGBO(220, 220, 220, 1),
                       ),
                     ),
-                  ),
-                  Container(
+                  ):Container(),
+                  showRecommendation==true?Container(
                     height: screenWidth / 2,
                     width: screenWidth,
                     margin: const EdgeInsets.symmetric(vertical: 15)
@@ -142,16 +148,16 @@ class _AnimeDetailScreenState extends State<AnimeDetails> {
                         recData: dataProvider.recommendationList[index],
                       ),
                     ),
-                  ),
+                  ):Container(),
                 ],
               ),
             ),
           ),
         ],
       )
-          : const Center(
+          :  Center(
           child: CircularProgressIndicator(
-            color: Colors.white,
+            color: Theme.of(context).secondaryHeaderColor,
             strokeWidth: 5,
           )),
     );

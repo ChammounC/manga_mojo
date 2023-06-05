@@ -12,11 +12,17 @@ class CardModel {
   });
 
   factory CardModel.fromJson(Map<String, dynamic> json) {
+    var engTitle=json['titles'][0]['title'];
+    for(int i =0;i<json['titles'].length;i++){
+      if(json['titles'][i]['type'].toLowerCase()=='english'){
+        engTitle=json['titles'][i]['title'];
+      }
+    }
     return CardModel(
       malId: json['mal_id'],
       url: json['url'],
       imageUrl: json['images']['jpg']['image_url'],
-      title: json['titles'][1]['title'],
+      title: engTitle,
     );
   }
 }

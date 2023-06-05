@@ -34,26 +34,27 @@ class _HomeScreenState extends State<Home> {
         },
         child: FittedBox(
           child: Container(
+            height:30,
             margin: const EdgeInsets.symmetric(horizontal: 5),
             padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 2.5),
             decoration: BoxDecoration(
               color: _selectedIndex == myIndex
-                  ? Colors.white
-                  : Color.fromRGBO(255, 222, 89, 1),
+                  ? Theme.of(context).secondaryHeaderColor
+                  : Theme.of(context).primaryColorLight,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: Color.fromRGBO(255, 222, 89, 1),
+                color:Theme.of(context).secondaryHeaderColor,
                 width: .8,
               ),
             ),
             child: Text(
               name,
               style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
                 color: _selectedIndex == myIndex
-                    ? Color.fromRGBO(255, 222, 89, 1)
-                    : Colors.white,
+                    ? Colors.white
+                    : const Color.fromRGBO(220, 220, 220, 1)
               ),
             ),
           ),
@@ -66,14 +67,21 @@ class _HomeScreenState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FloatingSearchAppBar(
-        colorOnScroll: Colors.white,
+        color: Theme.of(context).primaryColorLight,
         liftOnScrollElevation: 0,
-        elevation: 0,
+        shadowColor: Colors.red,
         hideKeyboardOnDownScroll: true,
         title: Container(),
         hint: 'Search anime or manga',
-        iconColor: Color.fromRGBO(255, 222, 89, 1),
+        iconColor: Color.fromRGBO(220, 220, 220, 1),
         autocorrect: false,
+        hintStyle: TextStyle(
+          color: Color.fromRGBO(100,100, 100, 1)
+        ),
+        titleStyle: TextStyle(
+            color: Color.fromRGBO(220,220, 220, 1)
+        ),
+
         onFocusChanged: (isFocused) {
           if (!isFocused) {
             setState(() {
@@ -87,7 +95,7 @@ class _HomeScreenState extends State<Home> {
             padding: const EdgeInsets.only(left: 5),
             child: IconButton(
                 icon: Icon(Icons.home,
-                    color: Theme.of(context).secondaryHeaderColor),
+                    color: Color.fromRGBO(220, 220, 220, 1)),
                 splashRadius: 25,
                 onPressed: () {
                   setState(() {
@@ -108,30 +116,30 @@ class _HomeScreenState extends State<Home> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Visibility(
-              maintainState: true,
-              visible: !searching,
-              child: Container(
-                height: 25,
-                margin: EdgeInsets.only(bottom: 10),
-                child: ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    _buttonBuilder('Top', 0, 'top'),
-                    _buttonBuilder('Upcoming', 1, 'upcoming'),
-                    _buttonBuilder('Series', 2, 'tv'),
-                    _buttonBuilder('Movies', 3, 'movie'),
-                    _buttonBuilder('OVA', 4, 'ova'),
-                    _buttonBuilder('Special Release', 5, 'special'),
-                  ],
+            Container(
+              color: Theme.of(context).primaryColorLight,
+              child: Visibility(
+                maintainState: true,
+                visible: !searching,
+                child: Container(
+                  height: 30,
+                  margin: EdgeInsets.only(bottom: 10),
+                  child: ListView(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      _buttonBuilder('Top', 0, 'airing'),
+                      _buttonBuilder('Popular', 1, 'bypopularity'),
+                      _buttonBuilder('Upcoming', 2, 'upcoming'),
+                      _buttonBuilder('Movies', 3, 'movie'),
+                      _buttonBuilder('Favorite', 4, 'favorite'),
+                    ],
+                  ),
                 ),
               ),
             ),
             Expanded(
-              child: Container(
-                child: AnimeGrid(),
-              ),
+              child: AnimeGrid(),
             ),
           ],
         ),

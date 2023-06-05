@@ -22,16 +22,16 @@ class _ErrorScreenState extends State<ErrorScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
+           Icon(
             Icons.error_outline,
-            color: Colors.black,
+            color: Colors.grey[700],
             size: 100,
           ),
           const SizedBox(height: 10),
-          const Text(
+          Text(
             'An Error Occurred',
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.grey[700],
               fontSize: 30,
               fontWeight: FontWeight.w800,
             ),
@@ -50,8 +50,7 @@ class _ErrorScreenState extends State<ErrorScreen> {
           ),
           ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Color.fromRGBO(255, 222, 89, 1),
-                onPrimary: Colors.white,
+                backgroundColor: Theme.of(context).secondaryHeaderColor,
                 padding: EdgeInsets.symmetric(horizontal: 25),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),

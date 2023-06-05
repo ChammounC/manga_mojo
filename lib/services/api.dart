@@ -14,15 +14,13 @@ class DataService with ChangeNotifier {
   late int genreId;
   late Anime animeData = Anime();
 
-  Future<void> getHomeData({String category = 'top'}) async {
-    final String url = '$BASE_URL/top/anime?limit=10';
+  Future<void> getHomeData({String category = 'airing'}) async {
+    String url = '$BASE_URL/top/anime?filter=$category&limit=50';
     try {
       isLoading = true;
       isError = false;
       var dio = Dio();
       var response = await dio.get(url);
-      // print('hello');
-      // print(response.data['data']);
       List items = response.data['data'];
       searchList = items.map((data) => CardModel.fromJson(data)).toList();
       isLoading = false;
@@ -105,7 +103,7 @@ class DataService with ChangeNotifier {
       var dio = Dio();
       var response = await dio.get(url);
       animeData = Anime.fromJson(response.data['data']);
-      await getRecommendationData(animeData.genreId);
+      await getRecommendationData(animeData.malId);
       isLoading = false;
       notifyListeners();
     } on DioError catch (e) {
@@ -137,15 +135,14 @@ class DataService with ChangeNotifier {
   }
 
   Future<void> getRecommendationData(int genreId) async {
-    final String url = '$BASE_URL/genre/anime/$genreId/1';
-    print('genreID:$genreId');
+    final String url = '$BASE_URL/anime/$genreId/recommendations';
     try {
       isLoading = true;
       isError = false;
       var dio = Dio();
       var response = await dio.get(url);
       List<Recommendation> tempRecommendation = [];
-      List items = response.data['anime'];
+      List items = response.data['data'];
       tempRecommendation =
           items.map((data) => Recommendation.fromJson(data)).take(5).toList();
       recommendationList = tempRecommendation;

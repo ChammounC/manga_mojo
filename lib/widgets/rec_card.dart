@@ -32,13 +32,14 @@ class RecommendationCard extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Text(
               recData.title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: TextStyle(
+                color:Color.fromRGBO(200, 200, 200, 1),
                 fontWeight: FontWeight.w700,
               ),
             )

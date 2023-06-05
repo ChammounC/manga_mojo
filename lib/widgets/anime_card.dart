@@ -46,14 +46,15 @@ class AnimeCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
+                      color:Color.fromRGBO(200, 200, 200, 1)
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(
+                  icon:  Icon(
                     Icons.bookmark_outline,
-                    color: Color.fromRGBO(255, 222, 89, 1),
+                    color:Theme.of(context).secondaryHeaderColor
                   ),
                   onPressed: () {},
                 ),

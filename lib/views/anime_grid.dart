@@ -31,7 +31,7 @@ class _AnimeGridPageState extends State<AnimeGrid> {
     final homeData = Provider.of<DataService>(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).primaryColorDark,
       body: SizedBox(
         height: screenHeight,
         width: screenWidth,

@@ -21,10 +21,14 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           appBarTheme: const AppBarTheme(
+            color:Color.fromRGBO(31, 31, 31, 1),
             elevation: 0,
           ),
-          primaryColor: Colors.white,
-          secondaryHeaderColor: const Color.fromRGBO(255, 222, 89, 1),
+          // primaryColor:const Color.fromRGBO(254,200,72,1),
+          primaryColor:const Color.fromRGBO(25, 25, 25, 1),
+          primaryColorDark: const Color.fromRGBO(25, 25, 25, 1),
+          primaryColorLight: const Color.fromRGBO(31, 31, 31, 1),
+          secondaryHeaderColor:  const Color.fromRGBO(254,200,72,1),
         ),
         home: Home(),
         routes: {

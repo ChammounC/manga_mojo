@@ -15,47 +15,92 @@ class AnimeHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                animeData.title,
+                animeData.titleEnglish,
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
+                  color:Color.fromRGBO(170, 170, 170, 1),
                 ),
               ),
               const SizedBox(height: 2.5),
               Text(
-                animeData.titleEnglish,
+                animeData.title,
                 style: TextStyle(
                   fontSize: 15,
-                  color: Colors.grey[600],
+                  color: Color.fromRGBO(120, 120, 120, 1),
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 1),
-              Text(
-                animeData.airingDate,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
+              const SizedBox(height: 15),
+              RichText(text: TextSpan(
+                text:'Aired On:  ',
+                style:  TextStyle(
+                    fontSize: 16,
+                    color: Color.fromRGBO(170, 170, 170, 1),
+                    fontWeight: FontWeight.w600,
+
                 ),
-              ),
-              const SizedBox(height: 1),
-              Text(
-                animeData.rating,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 1),
-              Text(
-                animeData.episodes <= 0
-                    ? 'Ongoing'
-                    : animeData.episodes.toString() + ' Episodes',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+                children: [
+                  TextSpan(text:animeData.airingDate,style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Color.fromRGBO(120, 120, 120, 1),
+              ),),
+                ]
+              ),),
+              const SizedBox(height: 5),
+              RichText(text: TextSpan(
+                  text:'Rated:  ',
+                  style:  TextStyle(
+                    fontSize: 16,
+                    color: Color.fromRGBO(170, 170, 170, 1),
+                    fontWeight: FontWeight.w600,
+
+                  ),
+                  children: [
+                    TextSpan(text:animeData.rating,style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Color.fromRGBO(120, 120, 120, 1),
+                    ),),
+                  ]
+              ),),
+              const SizedBox(height: 5),
+              RichText(text: TextSpan(
+                  text:'No. of Episodes:  ',
+                  style:  TextStyle(
+                    fontSize: 16,
+                    color: Color.fromRGBO(170, 170, 170, 1),
+                    fontWeight: FontWeight.w600,
+
+                  ),
+                  children: [
+                    TextSpan(text:animeData.episodes <= 0
+                        ? 'Ongoing'
+                        : animeData.episodes.toString(),style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Color.fromRGBO(120, 120, 120, 1),
+                    ),),
+                  ]
+              ),),
+              const SizedBox(height: 5),
+              RichText(text: TextSpan(
+                  text:'Studios:  ',
+                  style:  TextStyle(
+                    fontSize: 16,
+                    color: Color.fromRGBO(170, 170, 170, 1),
+                    fontWeight: FontWeight.w600,
+
+                  ),
+                  children: [
+                    TextSpan(text:animeData.studios,style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Color.fromRGBO(120, 120, 120, 1),
+                    ),),
+                  ]
+              ),),
             ],
           ),
         ),
@@ -68,14 +113,15 @@ class AnimeHeader extends StatelessWidget {
                   '${animeData.score}',
                   style: const TextStyle(
                     fontWeight: FontWeight.w900,
+                    color:Color.fromRGBO(170, 170, 170, 1),
                   ),
                 ),
                 SizedBox(
                   height: 50,
                   width: 50,
                   child: CircularProgressIndicator(
-                    color: Color.fromRGBO(255, 222, 89, 1),
-                    backgroundColor: Colors.grey.withOpacity(.35),
+                    color: const Color.fromRGBO(255, 222, 89, 1),
+                    backgroundColor:const Color.fromRGBO(170, 170, 170, 1).withOpacity(0.35),
                     strokeWidth: 6.0,
                     value: animeData.score / 10,
                   ),
@@ -91,6 +137,7 @@ class AnimeHeader extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontWeight: FontWeight.w700,
+                  color:Color.fromRGBO(170, 170, 170, 1),
                 ),
               ),
             )

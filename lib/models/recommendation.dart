@@ -13,10 +13,10 @@ class Recommendation {
 
   factory Recommendation.fromJson(Map<String, dynamic> json) {
     return Recommendation(
-      malId: json['mal_id'] ?? 1,
-      url: json['url'] ?? '',
-      imageUrl: json['image_url'] ?? '',
-      title: json['title'] ?? '',
+      malId: json['entry']['mal_id'] ?? 1,
+      url: json['entry']['url'] ?? '',
+      imageUrl: json['entry']['images']['jpg']['image_url'] ?? '',
+      title: json['entry']['title'] ?? '',
     );
   }
 }
