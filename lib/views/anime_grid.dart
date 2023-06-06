@@ -27,12 +27,13 @@ class _AnimeGridPageState extends State<AnimeGrid> {
     final device = MediaQuery.of(context);
     final screenHeight = device.size.height;
     final screenWidth = device.size.width;
-
+    final isTab = screenWidth<1201&&screenWidth>600;
+    final isMobile = screenWidth<601;
     final homeData = Provider.of<DataService>(context);
-
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColorDark,
-      body: SizedBox(
+      body: Container(
+        padding:isMobile?null:isTab?const EdgeInsets.all(10):const EdgeInsets.all(25),
         height: screenHeight,
         width: screenWidth,
         child: homeData.isError
@@ -56,8 +57,8 @@ class _AnimeGridPageState extends State<AnimeGrid> {
               ),
             ),
             itemCount: homeData.searchList.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: isMobile?2:isTab?4:6,
               childAspectRatio: 1.5 / 2.5,
               crossAxisSpacing: 15,
               mainAxisSpacing: 15,

@@ -1,3 +1,4 @@
+
 import 'package:mangamojo/models/anime.dart';
 import 'package:mangamojo/models/card.dart';
 import 'package:mangamojo/models/recommendation.dart';
@@ -14,8 +15,9 @@ class DataService with ChangeNotifier {
   late int genreId;
   late Anime animeData = Anime();
 
-  Future<void> getHomeData({String category = 'airing'}) async {
-    String url = '$BASE_URL/top/anime?filter=$category&limit=50';
+
+  Future<void> getHomeData({String category = 'airing',int page=1}) async {
+    String url = '$BASE_URL/top/anime?filter=$category&limit=24&page=$page';
     try {
       isLoading = true;
       isError = false;

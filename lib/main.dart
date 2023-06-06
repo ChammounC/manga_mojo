@@ -14,8 +14,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => DataService(),
+    return
+       ChangeNotifierProvider(
+          create: (context) => DataService(),
+
       child: MaterialApp(
         title: 'AnimSearch',
         debugShowCheckedModeBanner: false,

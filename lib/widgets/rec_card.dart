@@ -11,8 +11,12 @@ class RecommendationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isNotMobile = screenWidth>600;
     return Container(
-      width: 150,
+      width: isNotMobile?250:150,
+      height:isNotMobile?300:null,
+      margin:isNotMobile?const EdgeInsets.all(2):null,
       clipBehavior: Clip.none,
       child: InkWell(
         onTap: () => Navigator.of(context).pushReplacementNamed(
