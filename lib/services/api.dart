@@ -14,9 +14,11 @@ class DataService with ChangeNotifier {
   List<Recommendation> recommendationList = [];
   late int genreId;
   late Anime animeData = Anime();
+  int homePage=1;
 
 
   Future<void> getHomeData({String category = 'airing',int page=1}) async {
+    homePage=page;
     String url = '$BASE_URL/top/anime?filter=$category&limit=24&page=$page';
     try {
       isLoading = true;

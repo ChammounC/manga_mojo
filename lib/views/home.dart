@@ -16,10 +16,19 @@ class _HomeScreenState extends State<Home> {
   int _selectedIndex = 0;
   bool searching = false;
   bool searchBarFocused = false;
+  int globalPage = 0;
 
-  Future<void> getData(String category) async {
+  final categoryList = [
+    'airing',
+    'bypopularity',
+    'upcoming',
+    'movie',
+    'favorite',
+  ];
+
+  Future<void> getData(String category, {int page = 1}) async {
     await Provider.of<DataService>(context, listen: false)
-        .getHomeData(category: category);
+        .getHomeData(category: category, page: globalPage);
   }
 
   void searchData(String query) {
@@ -71,8 +80,10 @@ class _HomeScreenState extends State<Home> {
     final device = MediaQuery.of(context);
     final screenWidth = device.size.width;
     final screenHeight = device.size.height;
-    final isTab = screenWidth < 1201 && screenWidth > 600;
-    final isMobile = screenWidth < 600;
+    final isLargeTab = screenWidth < 1201 && screenWidth > 1000;
+    final isTab = screenWidth < 1001 && screenWidth > 699;
+    final isMobile = screenWidth < 700;
+    globalPage = Provider.of<DataService>(context).homePage;
     return Scaffold(
       body: FloatingSearchAppBar(
         color: Theme.of(context).primaryColorLight,
@@ -109,12 +120,17 @@ class _HomeScreenState extends State<Home> {
                 onTap: () => {
                   setState(() {
                     _selectedIndex = 0;
-                    getData('airing');
+                    globalPage = 1;
+                    Provider.of<DataService>(context, listen: false).homePage =
+                        1;
+                    getData('airing', page: 1);
                   }),
                 },
                 child: Image.asset(
                     scale: 10,
-                    searchBarFocused ? 'assets/icon/logo.png' : 'assets/icon/textLogo.png'),
+                    searchBarFocused
+                        ? 'assets/icon/logo.png'
+                        : 'assets/icon/textLogo.png'),
               )),
           //
         ],
@@ -132,44 +148,200 @@ class _HomeScreenState extends State<Home> {
             children: [
               Container(
                 color: Theme.of(context).primaryColorLight,
-                child: Visibility(
-                  maintainState: true,
-                  visible: !searching,
-                  child: Container(
-                    height: 30,
-                    margin: EdgeInsets.only(bottom: 10),
-                    child: ListView(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        _buttonBuilder('Top', 0, 'airing'),
-                        _buttonBuilder('Popular', 1, 'bypopularity'),
-                        _buttonBuilder('Upcoming', 2, 'upcoming'),
-                        _buttonBuilder('Movies', 3, 'movie'),
-                        _buttonBuilder('Favorite', 4, 'favorite'),
-                      ],
+                child: Row(
+                  children: [
+                    Flexible(
+                      flex: 6,
+                      child: Container(
+                        width: screenWidth,
+                        color: Theme.of(context).primaryColorLight,
+                        child: Visibility(
+                          maintainState: true,
+                          visible: !searching,
+                          child: Container(
+                            height: 30,
+                            margin: EdgeInsets.only(bottom: 10),
+                            child: ListView(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                _buttonBuilder('Top', 0, 'airing'),
+                                _buttonBuilder('Popular', 1, 'bypopularity'),
+                                _buttonBuilder('Upcoming', 2, 'upcoming'),
+                                _buttonBuilder('Movies', 3, 'movie'),
+                                _buttonBuilder('Favorite', 4, 'favorite'),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    isMobile
+                        ? Container()
+                        : Flexible(
+                            flex: isLargeTab
+                                ? 3
+                                : isTab
+                                    ? 1
+                                    : 3,
+                            child: Container(
+                                width: screenWidth,
+                                height: 30,
+                                color: Theme.of(context).primaryColorLight,
+                                child: Row(
+                                  children: [
+                                    InkWell(
+                                        onTap: globalPage <= 1
+                                            ? null
+                                            : () async{
+                                          setState((){
+                                                  globalPage--;
+                                                  Provider.of<DataService>(
+                                                          context,
+                                                          listen: false)
+                                                      .homePage--;
+                                                  getData(
+                                                      categoryList[
+                                                          _selectedIndex],
+                                                      page: globalPage);
+                                                });
+                                              },
+                                        child: SizedBox(
+                                            width: 50,
+                                            child: Icon(
+                                              Icons.keyboard_arrow_left,
+                                              color: globalPage <= 1
+                                                  ? Colors.grey
+                                                  : Theme.of(context)
+                                                      .secondaryHeaderColor,
+                                            ))),
+                                    Text(
+                                        Provider.of<DataService>(context,
+                                                listen: true)
+                                            .homePage
+                                            .toString(),
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .secondaryHeaderColor,fontSize: 16)),
+                                    InkWell(
+                                      onTap: ()async{
+                                        setState(() {
+                                        globalPage++;
+                                        Provider.of<DataService>(context,
+                                                listen: false)
+                                            .homePage++;
+                                        getData(categoryList[_selectedIndex],
+                                            page: globalPage);
+
+                                        });
+                                      },
+                                      child: SizedBox(
+                                          width: 50,
+                                          child: Icon(
+                                            Icons.keyboard_arrow_right,
+                                            color: Theme.of(context)
+                                                .secondaryHeaderColor,
+                                          )),
+                                    ),
+                                  ],
+                                ))),
+                  ],
                 ),
               ),
               constraints.maxWidth > 900
                   ? Expanded(
                       child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          flex: 7,
+                          child: AnimeGrid(),
+                        ),
+                        Flexible(
+                          flex: isTab ? 3 : 2,
+                          child:
+                              Container(color: Theme.of(context).primaryColor),
+                        ),
+                      ],
+                    ))
+                  : constraints.maxWidth < 901 && constraints.maxWidth > 700
+                      ? Expanded(child: AnimeGrid())
+                      : Expanded(
+                          child: Column(
                           children: [
+                            Flexible(flex: 12, child: AnimeGrid()),
                             Flexible(
-                              flex: 7,
-                              child: AnimeGrid(),
-                            ),
-                            Flexible(
-                              flex: isTab ? 3 : 2,
-                              child: Container(
-                                  color:
-                                      Theme.of(context).primaryColor),
-                            ),
+                                flex: 1,
+                                child: Container(
+                                    width: screenWidth,
+                                    color: Theme.of(context).primaryColorLight,
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          InkWell(
+                                              onTap: globalPage <= 1
+                                                  ? null
+                                                  : () async  {
+                                              setState((){
+                                              globalPage--;
+                                              Provider.of<DataService>(
+                                              context,
+                                              listen: false)
+                                                  .homePage--;
+                                              getData(
+                                              categoryList[
+                                              _selectedIndex],
+                                              page: globalPage);
+                                              });
+                                                      },
+                                              child: SizedBox(
+                                                  width: 50,
+                                                  child: Icon(
+                                                    Icons.keyboard_arrow_left,
+                                                    color: globalPage <= 1
+                                                        ? Colors.grey
+                                                        : Theme.of(context)
+                                                            .secondaryHeaderColor,
+                                                  ))),
+                                          Text(
+                                              Provider.of<DataService>(context,
+                                                      listen: true)
+                                                  .homePage
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .secondaryHeaderColor,
+                                                  fontSize: 20)),
+                                          InkWell(
+                                            onTap: () async {
+                                              setState(() {
+                                              globalPage++;
+                                              Provider.of<DataService>(context,
+                                                      listen: false)
+                                                  .homePage++;
+                                              getData(
+                                                  categoryList[_selectedIndex],
+                                                  page: globalPage);
+
+                                              });
+                                            },
+                                            child: SizedBox(
+                                                width: 50,
+                                                child: Icon(
+                                                  Icons.keyboard_arrow_right,
+                                                  color: Theme.of(context)
+                                                      .secondaryHeaderColor,
+                                                )),
+                                          ),
+                                        ],
+                                      ),
+                                    ))),
                           ],
                         ))
-                  : Expanded(child: AnimeGrid())
             ],
           );
         }),
