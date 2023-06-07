@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:auto_animated/auto_animated.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,62 +29,79 @@ class _AnimeGridPageState extends State<AnimeGrid> {
     final device = MediaQuery.of(context);
     final screenHeight = device.size.height;
     final screenWidth = device.size.width;
-    final isTab = screenWidth<1201&&screenWidth>600;
-    final isMobile = screenWidth<601;
+    final isTab = screenWidth < 1201 && screenWidth > 600;
+    final isMobile = screenWidth < 601;
     final homeData = Provider.of<DataService>(context);
-    return Scaffold(
-      backgroundColor: Theme.of(context).primaryColorDark,
-      body: Container(
-        padding:isMobile?null:isTab?const EdgeInsets.all(10):const EdgeInsets.all(25),
-        height: screenHeight,
-        width: screenWidth,
-        child: homeData.isError
-            ? ErrorScreen(homeData.errorMessage)
-            : homeData.isLoading
-            ? const Center(
-          child: CircularProgressIndicator(
-            color: Color.fromRGBO(255, 222, 89, 1),
-            strokeWidth: 5,
-          ),
-        )
-            : RefreshIndicator(
-          onRefresh: getData,
-          color: const Color.fromRGBO(255, 222, 89, 1),
-          strokeWidth: 2.5,
-          child: LiveGrid.options(
-            padding: const EdgeInsets.all(15).copyWith(left: 20, right: 20),
-            options: const LiveOptions(
-              showItemInterval: Duration(
-                milliseconds: 100,
-              ),
+    return LayoutBuilder(
+      builder: (BuildContext context,BoxConstraints constraints){
+        return Stack(
+          children: [
+
+            Image.asset(
+              constraints.maxWidth>600?"assets/images/web_bg.jpeg":"assets/images/mobile_bg.jpg",
+              height: screenHeight,
+              width: screenWidth,
+              fit: BoxFit.cover,
             ),
-            itemCount: homeData.searchList.length,
-            gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: isMobile?2:isTab?4:6,
-              childAspectRatio: 1.5 / 2.5,
-              crossAxisSpacing: 15,
-              mainAxisSpacing: 15,
-            ),
-            itemBuilder: (context, index, animation) =>
-                FadeTransition(
-                  opacity: Tween<double>(
-                    begin: 0,
-                    end: 1,
-                  ).animate(animation),
-                  child: SlideTransition(
-                    position: Tween<Offset>(
-                      begin: const Offset(0, -0.1),
-                      end: Offset.zero,
-                    ).animate(animation),
-                    child: AnimeCard(
-                      homeData: homeData.searchList[index],
-                      cardIndex: index,
+            Scaffold(
+              // backgroundColor: Theme.of(context).primaryColorDark,
+              backgroundColor: Colors.transparent,
+              body: homeData.isError
+                  ? ErrorScreen(homeData.errorMessage)
+                  : homeData.isLoading
+                  ? const Center(
+                child: CircularProgressIndicator(
+                  color: Color.fromRGBO(255, 222, 89, 1),
+                  strokeWidth: 5,
+                ),
+              )
+                  : RefreshIndicator(
+                onRefresh: getData,
+                color: const Color.fromRGBO(255, 222, 89, 1),
+                strokeWidth: 2.5,
+                child: LiveGrid.options(
+                  padding: const EdgeInsets.all(15)
+                      .copyWith(left: 20, right: 20),
+                  options: const LiveOptions(
+                    showItemInterval: Duration(
+                      milliseconds: 100,
                     ),
                   ),
+                  itemCount: homeData.searchList.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: isMobile
+                        ? 2
+                        : isTab
+                        ? 4
+                        : 6,
+                    childAspectRatio: 1.5 / 2.5,
+                    crossAxisSpacing: 15,
+                    mainAxisSpacing: 15,
+                  ),
+                  itemBuilder: (context, index, animation) =>
+                      FadeTransition(
+                        opacity: Tween<double>(
+                          begin: 0,
+                          end: 1,
+                        ).animate(animation),
+                        child: SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(0, -0.1),
+                            end: Offset.zero,
+                          ).animate(animation),
+                          child: AnimeCard(
+                            homeData: homeData.searchList[index],
+                            cardIndex: index,
+                          ),
+                        ),
+                      ),
                 ),
-          ),
-        ),
-      ),
+              ),
+            ),
+          ],
+        );
+      },
+
     );
   }
 }

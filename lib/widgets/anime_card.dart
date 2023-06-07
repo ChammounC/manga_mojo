@@ -30,35 +30,43 @@ class AnimeCard extends StatelessWidget {
                 tag: homeData.malId,
                 child: Image.network(
                   homeData.imageUrl,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fitWidth,
                 ),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: Text(
-                    homeData.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color:Color.fromRGBO(200, 200, 200, 1)
+          Container(
+            decoration: BoxDecoration(
+            color:Theme.of(context).primaryColor.withOpacity(0.5),
+            borderRadius: BorderRadius.all(Radius.circular(10))
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Center(
+                      child: Text(
+                        homeData.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color:Color.fromRGBO(200, 200, 200, 1)
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                IconButton(
-                  icon:  Icon(
-                    Icons.bookmark_outline,
-                    color:Theme.of(context).secondaryHeaderColor
+                  IconButton(
+                    icon:  Icon(
+                      Icons.bookmark_outline,
+                      color:Theme.of(context).secondaryHeaderColor
+                    ),
+                    onPressed: () {},
                   ),
-                  onPressed: () {},
-                ),
-              ],
+                ],
+              ),
             ),
           )
         ],

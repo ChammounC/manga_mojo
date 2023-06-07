@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
           create: (context) => DataService(),
 
       child: MaterialApp(
-        title: 'AnimSearch',
+        title: 'MangaMojo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           appBarTheme: const AppBarTheme(

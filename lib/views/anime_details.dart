@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:mangamojo/models/anime.dart';
 import 'package:mangamojo/services/api.dart';
@@ -166,7 +168,30 @@ class _AnimeDetailScreenState extends State<AnimeDetails> {
                 strokeWidth: 5,
               ));
         }else{
-          return Container();
+          return !dataProvider.isLoading?Stack(
+            children: [
+              Container(
+                height: screenHeight,
+                width: screenWidth,
+                decoration: const BoxDecoration(
+                  image:DecorationImage(
+                    image:ExactAssetImage("images/web_bg.jpeg"),
+                    fit:BoxFit.cover
+                  )
+                ),
+                child:BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX:10,sigmaY:10),
+                  child:Container(
+                    decoration: BoxDecoration(color:Colors.black.withOpacity(0.6)),
+                  )
+                )
+              ),
+            ],
+          ):Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).secondaryHeaderColor,
+                strokeWidth: 5,
+              ));
         }
 
       })

@@ -1,10 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:mangamojo/services/api.dart';
 import 'package:mangamojo/views/anime_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:provider/provider.dart';
-
 
 class Home extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class Home extends StatefulWidget {
 class _HomeScreenState extends State<Home> {
   int _selectedIndex = 0;
   bool searching = false;
+  bool searchBarFocused = false;
 
   Future<void> getData(String category) async {
     await Provider.of<DataService>(context, listen: false)
@@ -68,13 +70,16 @@ class _HomeScreenState extends State<Home> {
   Widget build(BuildContext context) {
     final device = MediaQuery.of(context);
     final screenWidth = device.size.width;
-    final isTab = screenWidth<1201&&screenWidth>600;
+    final screenHeight = device.size.height;
+    final isTab = screenWidth < 1201 && screenWidth > 600;
+    final isMobile = screenWidth < 600;
     return Scaffold(
       body: FloatingSearchAppBar(
         color: Theme.of(context).primaryColorLight,
         liftOnScrollElevation: 0,
         shadowColor: Colors.red,
         hideKeyboardOnDownScroll: true,
+        automaticallyImplyBackButton: false,
         title: Container(),
         hint: 'Search anime or manga',
         iconColor: Color.fromRGBO(220, 220, 220, 1),
@@ -82,26 +87,35 @@ class _HomeScreenState extends State<Home> {
         hintStyle: TextStyle(color: Color.fromRGBO(100, 100, 100, 1)),
         titleStyle: TextStyle(color: Color.fromRGBO(220, 220, 220, 1)),
         onFocusChanged: (isFocused) {
+          if (isFocused) {
+            setState(() {
+              searchBarFocused = true;
+            });
+          }
           if (!isFocused) {
             setState(() {
               searching = false;
-              getData('top');
+              searchBarFocused = false;
+              // getData('top');
             });
           }
         },
         leadingActions: [
           Padding(
-            padding: const EdgeInsets.only(left: 5),
-            child: IconButton(
-                icon: Icon(Icons.home, color: Color.fromRGBO(220, 220, 220, 1)),
-                splashRadius: 25,
-                onPressed: () {
+              padding: searchBarFocused
+                  ? const EdgeInsets.all(10)
+                  : const EdgeInsets.only(left: 5),
+              child: InkWell(
+                onTap: () => {
                   setState(() {
                     _selectedIndex = 0;
                     getData('airing');
-                  });
-                }),
-          ),
+                  }),
+                },
+                child: Image.asset(
+                    scale: 10,
+                    searchBarFocused ? 'assets/icon/logo.png' : 'assets/icon/textLogo.png'),
+              )),
           //
         ],
         onSubmitted: (query) {
@@ -141,20 +155,20 @@ class _HomeScreenState extends State<Home> {
               constraints.maxWidth > 900
                   ? Expanded(
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Flexible(
-                            flex:7,
-                            child: AnimeGrid(),
-                          ),
-                          Flexible(
-                            flex:isTab?3:2,
-                            child: Container(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                        ],
-                      ),
-                    )
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Flexible(
+                              flex: 7,
+                              child: AnimeGrid(),
+                            ),
+                            Flexible(
+                              flex: isTab ? 3 : 2,
+                              child: Container(
+                                  color:
+                                      Theme.of(context).primaryColor),
+                            ),
+                          ],
+                        ))
                   : Expanded(child: AnimeGrid())
             ],
           );
